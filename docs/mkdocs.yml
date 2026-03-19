@@ -1,0 +1,10 @@
+site_name: Personal RAG Chatbot
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Setup: setup.md
+  - Architecture: architecture.md
+  - RAG Details: rag.md
+  - API: api.md
+  - Evaluation: evaluation.md
