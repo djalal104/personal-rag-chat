@@ -16,7 +16,7 @@ def chat(req: ChatRequest):
     except ConnectionError as e:
         raise HTTPException(
             status_code=503, 
-            detail=f"Ollama service unavailable: {str(e)}. Make sure Ollama is running on http://localhost:11434"
+            detail=f"OpenRouter service unavailable: {str(e)}"
         )
     except RuntimeError as e:
         raise HTTPException(status_code=500, detail=f"LLM error: {str(e)}")

@@ -12,7 +12,7 @@
    - embeds the user query
    - retrieves top-k chunks
    - builds a context prompt
-   - asks the LLM (Ollama)
+   - asks the LLM (OpenRouter)
    - returns answer + sources
 
 ## Suggested improvements

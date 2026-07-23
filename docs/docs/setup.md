@@ -17,12 +17,8 @@ python -m backend.scripts.ingest
 uvicorn backend.app.main:app --reload --port 8000
 ```
 
-## Ollama
-
-```bash
-ollama pull llama3.1:8b
-ollama serve
-```
+## OpenRouter
+Ensure you have set the `OPENROUTER_API_KEY` in your `.env` file to authenticate with OpenRouter.
 
 ## Frontend
 

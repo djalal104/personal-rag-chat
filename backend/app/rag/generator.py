@@ -4,7 +4,6 @@ import os
 import requests
 from typing import List
 
-from openrouter import OpenRouter
 
 from app.core.config import settings
 from app.schemas.chat import ChatMessage, SourceChunk
@@ -64,15 +63,27 @@ def answer_with_rag(user_message: str, history: list[ChatMessage]):
 
     # 4. Call OpenRouter
     try:
-        with OpenRouter(api_key="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") as client:
-            response = client.chat.send(
-                model="nvidia/nemotron-3-nano-30b-a3b:free",
-                messages=messages,
-                temperature=settings.LLM_TEMPERATURE,
-            )
+        url = "https://openrouter.ai/api/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": settings.OPENROUTER_MODEL,
+            "messages": messages,
+            "temperature": settings.LLM_TEMPERATURE
+        }
+        resp = requests.post(url, headers=headers, json=payload, timeout=60)
+        resp.raise_for_status()
+        answer = resp.json()["choices"][0]["message"]["content"]
 
-            answer = response.choices[0].message.content
-
+    except requests.exceptions.HTTPError as e:
+        # Surface the actual error from OpenRouter (e.g. 401 invalid key)
+        try:
+            detail = e.response.json().get("error", {}).get("message", str(e))
+        except Exception:
+            detail = str(e)
+        raise ConnectionError(f"OpenRouter API error: {detail}") from e
     except requests.exceptions.RequestException as e:
         raise ConnectionError(f"OpenRouter request failed: {e}") from e
     except Exception as e:
